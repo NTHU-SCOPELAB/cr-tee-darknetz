@@ -1,0 +1,71 @@
+name: Daily Test Build
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # Runs daily at 00:00 UTC
+  workflow_dispatch:       # Allows manual trigger (optional)
+
+jobs:
+  daily-test-build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: true
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: Install required dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y adb acpica-tools autoconf automake bc bison build-essential \
+            ccache cpio cscope curl device-tree-compiler e2tools expect fastboot flex \
+            ftp-upload gdisk git libattr1-dev libcap-ng-dev libfdt-dev libftdi-dev \
+            libglib2.0-dev libgmp3-dev libhidapi-dev libmpc-dev libncurses5-dev libpixman-1-dev \
+            libslirp-dev libssl-dev libtool libusb-1.0-0-dev make mtools netcat ninja-build \
+            python3-cryptography python3-pip python3-pyelftools python3-serial python3-tomli \
+            python-is-python3 rsync swig unzip uuid-dev wget xdg-utils xsltproc xterm xz-utils \
+            zlib1g-dev zlib1g libgnutls28-dev
+      
+      - name: Setup repo tool and git config
+        run: |
+          curl -L https://storage.googleapis.com/git-repo-downloads/repo > ~/repo
+          sudo mv ~/repo /bin/repo
+          sudo chmod a+x /bin/repo
+
+          # Configure git identity
+          git config --global user.name 'SCOPELAB'
+          git config --global user.email 'whoami@scope.lab'
+
+      - name: Pull the source code
+        run: |
+          # Pull the source code
+          mkdir ~/optee && cd ~/optee
+          yes | repo init -u https://github.com/NTHU-SCOPELAB/cr-tee-manifest.git -m qemu_v8.xml
+          repo sync -j4
+          rm -rf optee_examples/aes
+          mkdir -p ~/optee/build
+          
+          # Pull darknetz
+          git clone https://github.com/NTHU-SCOPELAB/cr-tee-darknetz.git ~/optee/optee_examples/darknetz
+          git clone https://github.com/NTHU-SCOPELAB/cr-tee-darknetz-dataset.git ~/optee/optee_examples/darknetz/dataset
+
+      - name: Run build
+        run: |
+          cd ~/optee/build
+          make toolchains -j$(nproc)
+          make -j$(nproc)
