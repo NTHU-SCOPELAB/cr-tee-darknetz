@@ -61,7 +61,7 @@ jobs:
           mkdir -p ~/optee/build
           
           # Pull darknetz
-          git clone https://github.com/NTHU-SCOPELAB/cr-tee-darknetz.git ~/optee/optee_examples/darknetz
+          git clone https://github.com/pedestrianlove/cr-tee-darknetz.git ~/optee/optee_examples/darknetz
           git clone https://github.com/NTHU-SCOPELAB/cr-tee-darknetz-dataset.git ~/optee/optee_examples/darknetz/dataset
 
       - name: Run build
