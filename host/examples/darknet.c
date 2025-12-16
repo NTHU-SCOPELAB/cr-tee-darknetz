@@ -405,7 +405,7 @@ void darknet_main(int argc, char **argv)
     //test_convolutional_layer();
     if(argc < 2){
         fprintf(stderr, "usage: %s <function>\n", argv[0]);
-        return 0;
+        return;
     }
     gpu_index = find_int_arg(argc, argv, "-i", 0);
     if(find_arg(argc, argv, "-nogpu")) {
