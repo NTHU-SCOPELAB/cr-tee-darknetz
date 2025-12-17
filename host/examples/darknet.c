@@ -398,7 +398,7 @@ void visualize(char *cfgfile, char *weightfile)
     visualize_network(net);
 }
 
-void darknet_main(int argc, char **argv)
+int darknet_main(int argc, char **argv)
 {
     //test_resize("data/bad.jpg");
     //test_box();

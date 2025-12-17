@@ -804,6 +804,7 @@ int *read_intlist(char *s, int *n, int d);
 size_t rand_size_t();
 float rand_normal();
 float rand_uniform(float min, float max);
+int darknet_main(int argc, char **argv);
 
 #ifdef __cplusplus
 }
