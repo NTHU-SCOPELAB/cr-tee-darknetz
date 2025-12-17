@@ -1,5 +1,7 @@
 ![DarkneTZ](darknetz_logo.png)
 
+[![Daily Test Build](https://github.com/NTHU-SCOPELAB/cr-tee-darknetz/actions/workflows/build-darknetz.yaml/badge.svg)](https://github.com/NTHU-SCOPELAB/cr-tee-darknetz/actions/workflows/build-darknetz.yaml)
+
 This is an application that runs several layers of a Deep Neural Network (DNN) model in TrustZone.
 
 This application is based on [Darknet DNN framework](https://pjreddie.com/darknet/) and needs to be run with [OP-TEE](https://www.op-tee.org/), an open source framework for Arm TrustZone.
